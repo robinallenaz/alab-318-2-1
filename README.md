@@ -19,7 +19,7 @@ PORT=<your-port-number>
 API_KEYS=["key1", "key2", "key3"]
 ```
 - PORT: This is the port number on which your application will run (e.g., 3000).
-- API_KEYS: An array of valid API keys that your app can use for external services.
+- API_KEYS: An array of valid API keys that a client can use
 ### 3. Start the Application
 After setting up the .env file and installing the dependencies, you can run the application using:
 
