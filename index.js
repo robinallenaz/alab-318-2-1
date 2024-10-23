@@ -94,6 +94,10 @@ app.use((req, res, next) => {
   next();
 });
 
+//Static middleware for image serving
+
+app.use(express.static('public'));
+
 // Download Example
 app.use(express.static("./data"));
 
