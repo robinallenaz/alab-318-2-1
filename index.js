@@ -98,6 +98,25 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'));
 
+// Route to serve the image and download button
+app.get('/', (req, res) => {
+  res.send(`
+    <html>
+      <body>
+        <img src="Image.jpg" alt="Image">
+        <button id="download-btn">Download Image</button>
+        <script>
+          const downloadBtn = document.getElementById('download-btn');
+          downloadBtn.addEventListener('click', () => {
+            window.location.href = '/download';
+          });
+        </script>
+      </body>
+    </html>
+  `);
+});
+
+// Route to download the image
 app.get('/download', (req, res) => {
   res.download('./public/Image.jpg');
 });
