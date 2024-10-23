@@ -1,16 +1,15 @@
-require('dotenv').config()
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 3000;
-const usersRouter = require("./routes/users.js")
-const postsRouter = require("./routes/posts.js")
-const error = require('./utilities/error.js')
-const path = require('path')
-
+const usersRouter = require("./routes/users.js");
+const postsRouter = require("./routes/posts.js");
+const error = require("./utilities/error.js");
+const path = require("path");
 
 // Middleware
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ extended: true }));
 
 // New logging middleware to help us keep track of
 // requests during testing!
@@ -28,39 +27,44 @@ ${time.toLocaleTimeString()}: Received a ${req.method} request to ${req.url}.`
   next();
 });
 
-
-const apiKeys = process.env["API-KEYS"]
+const apiKeys = process.env["API-KEYS"];
 
 //API-KEY Middleware
 // Bouncer
-app.use('/api', (req, res, next) => {
-  const key = req.query["api-key"]
+app.use("/api", (req, res, next) => {
+  const key = req.query["api-key"];
 
   // Check for the absence of a key
   if (!key) {
-    res.status(400).json({error: "API Key Required"})
-    return
+    res.status(400).json({ error: "API Key Required" });
+    return;
   }
 
   // Check for key validity
-  if (apiKeys.indexOf(key) === - 1) {
-    res.status(401).json({error: "Invalid API Key"})
-    return
+  if (apiKeys.indexOf(key) === -1) {
+    res.status(401).json({ error: "Invalid API Key" });
+    return;
   }
 
-  req.key = key
-  next()
-})
+  req.key = key;
+  next();
+});
 
 //Router Set Up
-app.use("/api/users", usersRouter)
-app.use("/api/posts", postsRouter)
+app.use("/api/users", usersRouter);
+app.use("/api/posts", postsRouter);
 
+//Setting up a route in the server
+
+app.post("/submit", (req, res) => {
+  console.log(req.body.data);
+  res.send("Success");
+});
 
 // New User form
 app.get("/users/new", (req, res) => {
   // only works for GET and POST request be default
-  // if you are trying to send a PATCH, PUT, DELETE, etc. Look into method-override packed 
+  // if you are trying to send a PATCH, PUT, DELETE, etc. Look into method-override packed
   res.send(`
     <div>
       <h1>Create a User</h1>
@@ -74,13 +78,17 @@ app.get("/users/new", (req, res) => {
         <input type="submit" value="Create User" />
       </form>
     </div>
-    `)
-})
+    `);
+});
 
+//Route with a dynamic parameter
 
+app.get("/user/:name", (req, res) => {
+  res.send(`Hello, ${req.params.name}`);
+});
 
-// Download Example 
-app.use(express.static('./data'))
+// Download Example
+app.use(express.static("./data"));
 
 app.get("/get-data", (req, res) => {
   res.send(`
@@ -94,14 +102,12 @@ app.get("/get-data", (req, res) => {
         <button>Download Posts data</button>
       </form>
     </div>
-    `)
-})
+    `);
+});
 
 app.get("/download/:filename", (req, res) => {
-  res.download(path.join(__dirname, 'data', req.params.filename))
-})
-
-
+  res.download(path.join(__dirname, "data", req.params.filename));
+});
 
 // Adding some HATEOAS links.
 app.get("/", (req, res) => {
@@ -145,8 +151,8 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Work in progress!")
-})
+  res.send("Work in progress!");
+});
 
 // 404 Error Handling Middleware
 app.use((req, res, next) => {
@@ -161,7 +167,6 @@ app.use((err, req, res, next) => {
   res.json({ error: err.message });
 });
 
-
 app.listen(PORT, () => {
-  console.log(`Listening on port: ${PORT}`)
-})
+  console.log(`Listening on port: ${PORT}`);
+});
