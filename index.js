@@ -87,6 +87,13 @@ app.get("/user/:name", (req, res) => {
   res.send(`Hello, ${req.params.name}`);
 });
 
+//Creating custom middleware for logging
+
+app.use((req, res, next) => {
+  console.log(`${req.method} request for '${req.url}'`);
+  next();
+});
+
 // Download Example
 app.use(express.static("./data"));
 
