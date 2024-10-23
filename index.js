@@ -99,7 +99,7 @@ app.use((req, res, next) => {
 app.use(express.static('public'));
 
 app.get('/download', (req, res) => {
-  res.download('./public/myImage.jpg');
+  res.download('./public/Image.jpg');
 });
 
 // Download Example
